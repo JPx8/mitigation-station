@@ -1,8 +1,9 @@
-﻿import json
+﻿import json, urllib.request
 from pathlib import Path
 from typing import Optional
 
 DATA_FILE = Path(__file__).parent.parent / "data" / "enterprise-attack.json"
+MITRE_URL = "https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json"
 
 class MITRELoader:
     def __init__(self, data_path=None):
@@ -14,7 +15,11 @@ class MITRELoader:
 
     def load(self):
         if not self.data_path.exists():
-            return False
+            try:
+                self.data_path.parent.mkdir(parents=True, exist_ok=True)
+                urllib.request.urlretrieve(MITRE_URL, self.data_path)
+            except Exception:
+                return False
         with open(self.data_path, "r", encoding="utf-8") as f:
             bundle = json.load(f)
         self._index(bundle)

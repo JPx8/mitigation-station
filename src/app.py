@@ -80,8 +80,12 @@ def main():
     st.set_page_config(page_title="Mitigation Station", layout="wide")
     with st.sidebar:
         st.title("Mitigation Station"); st.caption("MS Sentinel SOC Lab"); st.divider()
-        api_key=st.text_input("Anthropic API Key",type="password",value=os.environ.get("ANTHROPIC_API_KEY",""))
-        vt_key=st.text_input("VirusTotal API Key (optional)",type="password",value=os.environ.get("VT_API_KEY",""),help="Get free key at virustotal.com")
+        _ant=os.environ.get("ANTHROPIC_API_KEY","")
+        if _ant: st.success("Anthropic API key configured"); api_key=_ant
+        else: api_key=st.text_input("Anthropic API Key",type="password")
+        _vt=os.environ.get("VT_API_KEY","")
+        if _vt: st.success("VirusTotal key configured"); vt_key=_vt
+        else: vt_key=st.text_input("VirusTotal API Key (optional)",type="password",help="Get free key at virustotal.com")
         st.divider()
         mitre=get_mitre()
         if mitre.is_loaded(): st.success(f"MITRE loaded - {mitre.count()} techniques")
