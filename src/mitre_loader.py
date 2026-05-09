@@ -12,19 +12,28 @@ class MITRELoader:
         self.by_name = {}
         self._stix_to_tid = {}
         self._loaded = False
+        self._error = None
 
     def load(self):
-        if not self.data_path.exists():
+        if self.data_path.exists():
             try:
-                self.data_path.parent.mkdir(parents=True, exist_ok=True)
-                urllib.request.urlretrieve(MITRE_URL, self.data_path)
-            except Exception:
+                with open(self.data_path, "r", encoding="utf-8") as f:
+                    bundle = json.load(f)
+                self._index(bundle)
+                self._loaded = True
+                return True
+            except Exception as e:
+                self._error = str(e)
                 return False
-        with open(self.data_path, "r", encoding="utf-8") as f:
-            bundle = json.load(f)
-        self._index(bundle)
-        self._loaded = True
-        return True
+        try:
+            with urllib.request.urlopen(MITRE_URL, timeout=60) as resp:
+                bundle = json.loads(resp.read().decode("utf-8"))
+            self._index(bundle)
+            self._loaded = True
+            return True
+        except Exception as e:
+            self._error = str(e)
+            return False
 
     def is_loaded(self):
         return self._loaded

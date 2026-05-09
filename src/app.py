@@ -89,7 +89,7 @@ def main():
         st.divider()
         mitre=get_mitre()
         if mitre.is_loaded(): st.success(f"MITRE loaded - {mitre.count()} techniques")
-        else: st.error("MITRE data not found.")
+        else: st.error(f"MITRE load failed: {mitre._error or 'unknown error'}")
 
     st.markdown("""<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
 <h1 style="font-family:'Bebas Neue',sans-serif;font-size:3em;letter-spacing:0.05em;margin-bottom:0;">MITIGATION STATION</h1>""", unsafe_allow_html=True)
