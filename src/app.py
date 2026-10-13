@@ -20,7 +20,7 @@ SEV_COLOR = {"critical":"#8B0000","high":"#dc3545","medium":"#e6a817","low":"#28
 SECTION = "font-size:1.4em;font-weight:700;margin:24px 0 8px 0;"
 
 @st.cache_resource(show_spinner="Loading MITRE ATT&CK data...")
-def get_mitre():
+def get_mitre(v=2):
     l = MITRELoader(); l.load(); return l
 
 def badge(conf):
